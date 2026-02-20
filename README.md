@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![Vikara Voice Agent](public/screenshots/landing.png)
+
+# Vikara — Voice AI Scheduling Agent
+
+A real-time voice agent that helps you schedule product demos in seconds. Built with the OpenAI Realtime API and Next.js.
+
+## Features
+
+- **Voice-first scheduling** — speak naturally to book a 30-minute product demo
+- **Real-time audio visualization** — Web Audio API-driven visualizer for both mic input and agent output
+- **Smart date handling** — understands relative dates ("next Friday"), verifies with exact dates, and suggests times
+- **Calendar invites** — sends `.ics` calendar invites via email with accept/decline buttons
+- **Agent-initiated call ending** — the agent says goodbye and hangs up when the conversation is done
+
+![Active Session](public/screenshots/active-session.png)
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org) 16 (App Router)
+- [OpenAI Agents SDK](https://github.com/openai/openai-agents-js) (`@openai/agents`) with Realtime API
+- WebRTC transport with Web Audio API visualization
+- [Resend](https://resend.com) for email delivery
+- Tailwind CSS v4
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a `.env.local` file:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+OPENAI_API_KEY=sk-...
+RESEND_API_KEY=re_...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the dev server:
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) and click the microphone to start a call.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How It Works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. User clicks the mic button to start a call
+2. The app creates an ephemeral OpenAI Realtime API session via a server action
+3. A WebRTC connection is established with the OpenAI Realtime API
+4. The agent greets the user and collects a date, time, name, and email
+5. The `schedule_demo` tool sends a calendar invite via Resend
+6. The agent confirms and ends the call with the `end_call` tool
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

@@ -32,7 +32,7 @@ export function VoiceAgent() {
   const [isMuted, setIsMuted] = useState(false);
 
   const endingRef = useRef(false);
-  const logsEndRef = useRef<HTMLDivElement | null>(null);
+  const logsContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Audio visualization refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -280,7 +280,8 @@ export function VoiceAgent() {
 
   // Auto-scroll logs to bottom
   useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = logsContainerRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [logs]);
 
   // Cleanup on unmount
@@ -479,7 +480,7 @@ export function VoiceAgent() {
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Transcript
             </h2>
-            <div role="log" aria-live="polite" aria-label="Call transcript" className="max-h-64 space-y-2 overflow-y-auto">
+            <div ref={logsContainerRef} role="log" aria-live="polite" aria-label="Call transcript" className="max-h-64 space-y-2 overflow-y-auto">
               {logs.map((log) => (
                 <div
                   key={log.id}
@@ -502,7 +503,6 @@ export function VoiceAgent() {
                   {log.text}
                 </div>
               ))}
-              <div ref={logsEndRef} />
             </div>
           </div>
         )}
