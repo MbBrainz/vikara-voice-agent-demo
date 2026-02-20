@@ -32,6 +32,7 @@ export function VoiceAgent() {
   const [isMuted, setIsMuted] = useState(false);
 
   const endingRef = useRef(false);
+  const logsEndRef = useRef<HTMLDivElement | null>(null);
 
   // Audio visualization refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -277,6 +278,11 @@ export function VoiceAgent() {
     setIsMuted(next);
   }, [isMuted]);
 
+  // Auto-scroll logs to bottom
+  useEffect(() => {
+    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [logs]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -496,6 +502,7 @@ export function VoiceAgent() {
                   {log.text}
                 </div>
               ))}
+              <div ref={logsEndRef} />
             </div>
           </div>
         )}
