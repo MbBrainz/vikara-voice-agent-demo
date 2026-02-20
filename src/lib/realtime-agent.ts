@@ -23,8 +23,7 @@ const endCallTool = tool({
     "End the phone call and disconnect. Call this ONLY after you have said your final goodbye to the caller.",
   parameters: z.object({}),
   execute: async () => {
-    // Schedule disconnect after the tool result is sent back over the data channel
-    setTimeout(() => endCallHandler?.(), 1500);
+    endCallHandler?.();
     return "Call ended.";
   },
 });

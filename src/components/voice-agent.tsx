@@ -204,6 +204,16 @@ export function VoiceAgent() {
         });
       }
 
+      // Wait for audio playback to finish before disconnecting
+      let endCallTimeout: ReturnType<typeof setTimeout> | null = null;
+
+      session.on("audio_stopped", () => {
+        if (!endingRef.current) return;
+        // audio_stopped = server done sending audio; add buffer for WebRTC playback lag
+        if (endCallTimeout) clearTimeout(endCallTimeout);
+        endCallTimeout = setTimeout(() => disconnect(), 2000);
+      });
+
       // Register end_call handler so the agent can hang up
       setEndCallHandler(() => {
         // Immediately transition UI
@@ -215,8 +225,8 @@ export function VoiceAgent() {
           cancelAnimationFrame(animationFrameRef.current);
           animationFrameRef.current = 0;
         }
-        // Full cleanup after data channel has flushed
-        setTimeout(() => disconnect(), 500);
+        // Fallback: disconnect after 6s even if audio_stopped never fires
+        endCallTimeout = setTimeout(() => disconnect(), 6000);
       });
 
       startVisualization();
